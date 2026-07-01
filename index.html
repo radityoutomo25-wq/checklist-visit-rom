@@ -583,8 +583,8 @@ function getFlt(){
   return visits.filter(function(v){
     if(r&&v.rom!==r) return false;
     if(e&&v.entity!==e) return false;
-    if(f&&v.date<f) return false;
-    if(t&&v.date>t) return false;
+    if(f&&(v.date||v.tanggal||"")<f) return false;
+    if(t&&(v.date||v.tanggal||"")>t) return false;
     return true;
   });
 }
@@ -616,7 +616,7 @@ function renderDash(){
       var c=v.compliance, cl=clr(c), eb=ebdg(v.entity);
       h+="<div class='vi' onclick='showPage(\"resume\");renderResume(visits.find(function(x){return x.id=="+v.id+"}))'>";
       h+="<div class='vin'><div class='vn'>"+v.apotek+"</div>";
-      h+="<div class='vs'>"+v.rom+" &middot; "+v.date+" <span class='bdg "+eb+"' style='margin-left:4px'>"+v.entity+"</span></div></div>";
+      h+="<div class='vs'>"+v.rom+" &middot; "+(v.date||v.tanggal||"")+" <span class='bdg "+eb+"' style='margin-left:4px'>"+v.entity+"</span></div></div>";
       h+="<div class='vsc'><div class='sval' style='color:"+cl+"'>"+c+"%</div>";
       h+="<div class='mb'><div class='mf' style='width:"+c+"%;background:"+cl+"'></div></div>";
       h+="<div class='sis'>"+v.issue+" temuan</div></div></div>";
@@ -661,7 +661,7 @@ function renderResList(){
     var c=v.compliance, cl=clr(c), eb=ebdg(v.entity);
     h+="<div class='vi' style='padding:11px 14px' onclick='renderResume(visits.find(function(x){return x.id=="+v.id+"}))'>";
     h+="<div class='vin'><div class='vn'>"+v.apotek+"</div>";
-    h+="<div class='vs'>"+v.rom+" &middot; "+v.date+" <span class='bdg "+eb+"' style='margin-left:4px'>"+v.entity+"</span></div></div>";
+    h+="<div class='vs'>"+v.rom+" &middot; "+(v.date||v.tanggal||"")+" <span class='bdg "+eb+"' style='margin-left:4px'>"+v.entity+"</span></div></div>";
     h+="<div class='vsc'><div class='sval' style='color:"+cl+"'>"+c+"%</div>";
     h+="<div class='mb'><div class='mf' style='width:"+c+"%;background:"+cl+"'></div></div>";
     h+="<div class='sis'>"+v.issue+" temuan</div></div></div>";
@@ -721,7 +721,7 @@ function renderResume(v){
       "<div class='rh'>"+
         "<div><div class='ra'>"+v.apotek+"</div>"+
         "<div class='rm'>"+v.rom+"</div>"+
-        "<div class='rm'><i class='ti ti-calendar' style='font-size:12px'></i> "+v.date+" &nbsp;&middot;&nbsp; <i class='ti ti-clock' style='font-size:12px'></i> "+v.time+"</div>"+
+        "<div class='rm'><i class='ti ti-calendar' style='font-size:12px'></i> "+(v.date||v.tanggal||"")+" &nbsp;&middot;&nbsp; <i class='ti ti-clock' style='font-size:12px'></i> "+(v.time||v.waktu||"")+"</div>"+
         "<div style='margin-top:6px'><span class='bdg "+eb+"'>"+v.entity+"</span></div></div>"+
         "<div class='rsc'><div class='rp' style='color:"+cl+"'>"+c+"%</div>"+
         "<div class='rl' style='color:"+cl+"'>"+lbl+"</div>"+
@@ -761,7 +761,7 @@ function exportDash(){
   var rows=[["Tanggal","Waktu","ROM","Apotek","Entitas","Compliance %","Total Sesuai","Total Masalah","Total N/A","Daftar Temuan","Catatan ROM"]];
   flt.forEach(function(v){
     var issueList=v.issues.map(function(i){return "["+i.secId+"] "+i.item+(i.notes?" ("+i.notes+")":""); }).join(" | ");
-    rows.push([v.date,v.time,v.rom,v.apotek,v.entity,v.compliance,v.ok,v.issue,v.na,issueList,v.notes||""]);
+    rows.push([(v.date||v.tanggal||""),(v.time||v.waktu||""),v.rom,v.apotek,v.entity,v.compliance,v.ok,v.issue,v.na,issueList,v.notes||""]);
   });
   var d=new Date().toISOString().slice(0,10);
   downloadCSV(rows,"kunjungan_ROM_"+d+".csv");
@@ -773,7 +773,7 @@ function exportResume(vid){
   // Sheet 1: summary
   var rows=[["=== RESUME KUNJUNGAN ROM ==="],
     ["Apotek",v.apotek],["Entitas",v.entity],["ROM",v.rom],
-    ["Tanggal",v.date],["Waktu",v.time],
+    ["Tanggal",(v.date||v.tanggal||"")],["Waktu",(v.time||v.waktu||"")],
     ["Compliance",v.compliance+"%"],["Total Sesuai",v.ok],
     ["Total Masalah",v.issue],["Total N/A",v.na],
     ["Catatan ROM",v.notes||""],[""],
@@ -785,7 +785,7 @@ function exportResume(vid){
     var st=item.status==="ok"?"Sesuai":item.status==="x"?"Masalah":item.status==="na"?"N/A":"Belum diisi";
     rows.push([item.no,item.secId+" - "+item.section,item.item,st,item.notes||""]);
   });
-  var d=v.date.replace(/-/g,"");
+  var d=(v.date||v.tanggal||"").replace(/-/g,"");
   var ap=v.apotek.replace(/[^a-zA-Z0-9]/g,"_").slice(0,20);
   downloadCSV(rows,"resume_"+ap+"_"+d+".csv");
 }
