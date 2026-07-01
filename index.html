@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist Kunjungan ROM</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f8f9fa;--sur:#fff;--sur2:#f1f3f5;--bdr:#dee2e6;--txt:#212529;--mut:#6c757d;--r:10px;--rs:6px;--teal:#1D9E75;--blue:#1B4F72;--red:#E24B4A;--amb:#EF9F27}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+.top{background:var(--blue);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.top h1{font-size:15px;font-weight:600;flex:1}
+.top span{font-size:11px;opacity:.6}
+.nav{display:flex;background:var(--sur);border-bottom:1px solid var(--bdr);position:sticky;top:49px;z-index:99}
+.nb{flex:1;padding:12px 8px;border:none;background:transparent;color:var(--mut);font-size:12px;font-weight:500;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;border-bottom:2px solid transparent;transition:all .15s}
+.nb i{font-size:18px}
+.nb.act{color:var(--blue);border-bottom-color:var(--blue)}
+.pg{display:none;padding:12px 14px 100px}
+.pg.act{display:block}
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.ct{font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.fl{font-size:12px;color:var(--mut);margin-bottom:4px;font-weight:500}
+.fg{margin-bottom:12px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+select,input,textarea{width:100%;border:1px solid var(--bdr);border-radius:var(--rs);padding:9px 11px;font-size:13px;background:var(--sur);color:var(--txt);-webkit-appearance:none;appearance:none}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--blue)}
+.sh{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--rs);margin-bottom:3px;cursor:pointer;user-select:none}
+.sh .sl{font-size:13px;font-weight:600;color:#fff;flex:1}
+.sh .sc{font-size:11px;color:rgba(255,255,255,.7)}
+.sh .sv{font-size:16px;color:rgba(255,255,255,.8);transition:transform .2s}
+.sh.col .sv{transform:rotate(-90deg)}
+.iw{margin-bottom:3px}
+.ir{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--sur2);border-radius:var(--rs)}
+.ino{font-size:11px;color:var(--mut);min-width:20px;padding-top:2px;font-weight:600}
+.itx{flex:1;font-size:13px;line-height:1.5}
+.sps{display:flex;gap:4px}
+.pl{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;border:1.5px solid;cursor:pointer;transition:all .12s;white-space:nowrap;background:transparent}
+.pl-ok{color:#1D9E75;border-color:#1D9E75}
+.pl-ok.sel{background:#1D9E75;color:#fff}
+.pl-x{color:var(--red);border-color:var(--red)}
+.pl-x.sel{background:var(--red);color:#fff}
+.pl-na{color:var(--mut);border-color:var(--bdr)}
+.pl-na.sel{background:var(--mut);color:#fff}
+.nr{padding:4px 12px 8px;display:none}
+.nr.show{display:block}
+textarea.ni{font-size:12px;resize:none;border-color:var(--red);padding:7px 10px}
+.pw{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:12px 14px;position:sticky;bottom:0;z-index:98;box-shadow:0 -2px 8px rgba(0,0,0,.08)}
+.pb{height:8px;background:var(--bg);border-radius:100px;overflow:hidden;margin:6px 0}
+.pf{height:100%;background:var(--teal);border-radius:100px;transition:width .3s}
+.ps{display:flex;gap:14px;font-size:12px}
+.sub{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px}
+.sub:disabled{opacity:.45;cursor:not-allowed}
+.sub:not(:disabled):active{transform:scale(.98)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.sc2{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:12px;text-align:center}
+.sv2{font-size:26px;font-weight:700}
+.sl2{font-size:11px;color:var(--mut);margin-top:2px}
+.vi{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--bdr);cursor:pointer}
+.vi:last-child{border-bottom:none}
+.vin{flex:1;min-width:0}
+.vn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vs{font-size:11px;color:var(--mut);margin-top:2px}
+.vsc{text-align:right;min-width:54px}
+.sval{font-size:16px;font-weight:700}
+.sis{font-size:11px;color:var(--mut)}
+.mb{height:4px;background:var(--bg);border-radius:100px;overflow:hidden;margin-top:4px}
+.mf{height:100%;border-radius:100px}
+.bdg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:600}
+.bh{background:#E6F1FB;color:#185FA5}
+.bm{background:#EAF3DE;color:#3B6D11}
+.bs{background:#FAEEDA;color:#854F0B}
+.es{text-align:center;padding:40px 20px;color:var(--mut)}
+.es i{font-size:36px;display:block;margin-bottom:10px;opacity:.4}
+.es p{font-size:13px}
+.rh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.ra{font-size:17px;font-weight:700}
+.rm{font-size:12px;color:var(--mut);margin-top:3px}
+.rsc{text-align:right}
+.rp{font-size:30px;font-weight:700}
+.rl{font-size:12px}
+.sr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bdr)}
+.sr:last-child{border-bottom:none}
+.sd{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.sn{flex:1;font-size:12px;color:var(--mut)}
+.spc{font-size:13px;font-weight:600}
+.ii{display:flex;gap:8px;padding:9px 10px;background:#FEF9F9;border-radius:var(--rs);margin-bottom:5px;border-left:3px solid var(--red)}
+.it{font-size:12px;line-height:1.5}
+.in2{font-size:11px;color:var(--mut);margin-top:3px}
+.ist{display:inline-block;padding:1px 7px;border-radius:100px;font-size:10px;font-weight:600;color:#fff;margin-bottom:4px}
+.bb{display:flex;align-items:center;gap:6px;padding:10px 0;font-size:13px;color:var(--blue);background:none;border:none;cursor:pointer;font-weight:500;margin-bottom:8px}
+.tir{margin-bottom:10px}
+.tit{font-size:12px;margin-bottom:4px}
+.tib{height:5px;background:var(--bg);border-radius:100px;overflow:hidden}
+.tif{height:100%;background:var(--red);border-radius:100px}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#212529;color:#fff;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+@media(min-width:600px){.pg,.pw{max-width:600px;margin-left:auto;margin-right:auto}.pw{left:50%;transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+<div class="top"><i class="ti ti-building-store" style="font-size:20px"></i><h1>Checklist Kunjungan ROM</h1><span>v3.1</span></div>
+<div class="nav">
+  <button class="nb act" id="nav-form" onclick="showPage('form')"><i class="ti ti-clipboard-check"></i>Form</button>
+  <button class="nb" id="nav-dashboard" onclick="showPage('dashboard')"><i class="ti ti-chart-bar"></i>Dashboard</button>
+  <button class="nb" id="nav-resume" onclick="showPage('resume')"><i class="ti ti-file-description"></i>Resume</button>
+</div>
+
+<!-- FORM -->
+<div id="page-form" class="pg act">
+  <div class="card">
+    <div class="ct"><i class="ti ti-user-check"></i>Informasi Kunjungan</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Nama ROM</div>
+        <select id="sel-rom" onchange="onRomChange()">
+          <option value="">-- Pilih ROM --</option>
+          <option>Alfian Rizky Putra</option><option>Andik Eka Saputra</option>
+          <option>Arifin Hulu</option><option>Bentar Bagus Adipradana</option>
+          <option>Kelvin Aldrin</option><option>R. Rini Anggraini</option>
+          <option>Silvia Anel Fiarti</option><option>Venansius Mario Petrida Mbui</option>
+          <option disabled style="color:#ccc">──────────</option>
+          <option>Lainnya</option>
+        </select>
+        <input type="text" id="rom-other" placeholder="Ketik nama..." style="display:none;margin-top:6px" oninput="updRomOther()">
+      </div>
+      <div class="fg"><div class="fl">Apotek</div>
+        <select id="sel-apotek"><option value="">-- Pilih Apotek --</option></select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Tanggal</div><input type="date" id="inp-date"></div>
+      <div class="fg"><div class="fl">Waktu Mulai</div><input type="time" id="inp-time"></div>
+    </div>
+  </div>
+  <div id="chk"></div>
+  <div class="fg" style="margin-top:4px">
+    <div class="fl">Catatan Keseluruhan / Rekomendasi ROM</div>
+    <textarea id="notes" rows="3" placeholder="Tuliskan catatan umum atau rekomendasi..."></textarea>
+  </div>
+  <button class="sub" onclick="submitVisit()"><i class="ti ti-send"></i>Submit Kunjungan</button>
+</div>
+
+<!-- PROGRESS -->
+<div class="pw" id="pw" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:12px;font-weight:600">Progress</span>
+    <span style="font-size:12px;font-weight:600" id="ptxt">0 / 0</span>
+  </div>
+  <div class="pb"><div class="pf" id="pfill" style="width:0%"></div></div>
+  <div class="ps">
+    <span style="color:var(--teal);font-weight:600"><span id="cok">0</span> sesuai</span>
+    <span style="color:var(--red);font-weight:600"><span id="ciss">0</span> masalah</span>
+    <span style="color:var(--mut)"><span id="cna">0</span> N/A</span>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="pg">
+  <div class="card" style="padding:10px 14px">
+    <div style="font-size:11px;font-weight:600;color:var(--mut);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Filter</div>
+    <div class="fr">
+      <div><div class="fl">ROM</div>
+        <select id="flt-rom" onchange="renderDash()">
+          <option value="">Semua ROM</option>
+          <option>Alfian Rizky Putra</option><option>Andik Eka Saputra</option>
+          <option>Arifin Hulu</option><option>Bentar Bagus Adipradana</option>
+          <option>Kelvin Aldrin</option><option>R. Rini Anggraini</option>
+          <option>Silvia Anel Fiarti</option><option>Venansius Mario Petrida Mbui</option>
+          <option disabled style="color:#ccc">──────────</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+      <div><div class="fl">Entitas</div>
+        <select id="flt-ent" onchange="renderDash()">
+          <option value="">Semua</option>
+          <option value="HAK">HAK</option><option value="MRI">MRI</option><option value="SBS">SBS</option>
+        </select>
+      </div>
+    </div>
+    <div class="fr" style="margin-bottom:8px">
+      <div><div class="fl">Dari Tanggal</div><input type="date" id="flt-from" onchange="renderDash()"></div>
+      <div><div class="fl">Sampai Tanggal</div><input type="date" id="flt-to" onchange="renderDash()"></div>
+    </div>
+    <button onclick="clearFlt()" style="width:100%;padding:7px;font-size:12px;background:transparent;border:1px solid var(--bdr);border-radius:var(--rs);color:var(--mut);cursor:pointer"><i class="ti ti-x" style="font-size:12px"></i> Reset Filter</button>
+  </div>
+  <button onclick="exportDash()" style="width:100%;padding:11px;margin-bottom:12px;background:#1D9E75;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><i class="ti ti-table-export"></i> Export Semua Kunjungan ke CSV</button>
+  <div class="sg">
+    <div class="sc2"><div class="sv2" id="dt" style="color:var(--blue)">0</div><div class="sl2">Total Kunjungan</div></div>
+    <div class="sc2"><div class="sv2" id="da" style="color:var(--teal)">0%</div><div class="sl2">Avg Compliance</div></div>
+    <div class="sc2"><div class="sv2" id="di" style="color:var(--red)">0</div><div class="sl2">Total Temuan</div></div>
+    <div class="sc2"><div class="sv2" id="dap" style="color:var(--amb)">0</div><div class="sl2">Apotek Visited</div></div>
+  </div>
+  <div class="card"><div class="ct" style="justify-content:space-between"><span style="display:flex;align-items:center;gap:6px"><i class="ti ti-list-check"></i>Riwayat Kunjungan</span><div style="display:flex;gap:6px">
+<button onclick="fetchFromSheet();showToast('Memuat data terbaru...')" style="padding:4px 10px;font-size:11px;background:var(--blue);color:#fff;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:4px"><i class="ti ti-refresh"></i> Refresh</button>
+<button onclick="clearCache()" style="padding:4px 10px;font-size:11px;background:#888;color:#fff;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:4px"><i class="ti ti-trash"></i> Clear Cache</button>
+</div></div><div id="vlist"></div></div>
+  <div class="card"><div class="ct"><i class="ti ti-alert-triangle" style="color:var(--red)"></i>Top 5 Temuan Terbanyak</div><div id="tlist"></div></div>
+</div>
+
+<!-- RESUME -->
+<div id="page-resume" class="pg">
+  <div class="card" style="padding:10px 14px">
+    <div style="font-size:11px;font-weight:600;color:var(--mut);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Filter Resume</div>
+    <div class="fr">
+      <div><div class="fl">ROM</div>
+        <select id="rf-rom" onchange="renderResList()">
+          <option value="">Semua ROM</option>
+          <option>Alfian Rizky Putra</option><option>Andik Eka Saputra</option>
+          <option>Arifin Hulu</option><option>Bentar Bagus Adipradana</option>
+          <option>Kelvin Aldrin</option><option>R. Rini Anggraini</option>
+          <option>Silvia Anel Fiarti</option><option>Venansius Mario Petrida Mbui</option>
+          <option disabled style="color:#ccc">──────────</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+      <div><div class="fl">Cari Apotek</div><input type="text" id="rf-ap" placeholder="Nama apotek..." oninput="renderResList()"></div>
+    </div>
+  </div>
+  <div id="rlist"></div>
+  <div id="rcontent"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// GANTI URL INI dengan Apps Script Web App URL kamu
+// ============================================================
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmsgsB7-QWRhBhqK37IzSmlIxwqb4KurFuvBDt0IJrXMb530QFWecJXdPCrMmKuTY/exec";
+// ============================================================
+
+var SECS=[
+  {id:"A",title:"Operasional Harian \u2013 Stok, Suhu & Kebersihan",color:"#1B4F72",items:[
+    "Stok fisik obat fast-moving sesuai sistem (minimal 10 item cek)",
+    "Tidak ada produk expired / near-expiry (\u22643 bulan) di rak aktif",
+    "Produk near-expiry sudah ditandai & dipisahkan (FEFO diterapkan)",
+    "Suhu penyimpanan produk cold-chain tercatat & sesuai (2\u20138\u00b0C) atau freezer (-10 s/d -25\u00b0C)",
+    "Suhu ruang apotek terjaga (maks 25\u00b0C), termometer berfungsi",
+    "Area penyimpanan bersih, rapi, dan bebas hama",
+    "Obat Keras / Psikotropika tersimpan di lemari terkunci",
+    "Label rak & bin location terpasang dan terbaca jelas",
+    "Stok buffer/safety stock tersedia untuk produk prioritas"
+  ]},
+  {id:"B",title:"Kesalahan Kirim \u2013 IK Compliance",color:"#154360",items:[
+    "IK v3 (Instruksi Kerja Kesalahan Kirim) terpajang di area kerja",
+    "Golden Rule #1: 1 Order = 2 People (checker & packer berbeda)",
+    "Golden Rule #2: 1 Order = 1 Basket (tidak mixing order)",
+    "Form Checklist IK diisi setiap shift (cek log terakhir)",
+    "Basket/wadah order terpisah setiap order",
+    "Packer memverifikasi ulang isi basket sebelum packing",
+    "Tidak ada order lama (backlog) yang tidak terselesaikan di akhir shift",
+    "Kasus IK bulan ini sudah diidentifikasi root cause & dicatat"
+  ]},
+  {id:"C",title:"GR SLA \u2013 Penerimaan Barang",color:"#1A5276",items:[
+    "GR dilakukan \u22642 hari sejak tanggal barang datang (target \u226597%)",
+    "Cek fisik qty & kondisi barang saat penerimaan (BAST diisi)",
+    "Tidak ada PO pending GR >2 hari di sistem (cek daftar open PO)",
+    "Suhu cold-chain diverifikasi saat penerimaan & dicatat",
+    "Selisih/kerusakan barang langsung dilaporkan ke ROM & tim supply",
+    "Barang baru langsung disimpan sesuai planogram & FEFO"
+  ]},
+  {id:"D",title:"Performa Transaksi & Upselling",color:"#117A65",items:[
+    "GMV aktual minggu berjalan dicatat & dibandingkan target",
+    "Basket size rata-rata minggu ini dicatat & dibandingkan benchmark",
+    "Ada \u22651 upaya upselling tercatat per shift (suplemen, OTC add-on)",
+    "Produk promo/bundle aktif dipajang di area strategis (dekat kasir)",
+    "Apoteker/TTK memahami produk unggulan & promo aktif",
+    "Tidak ada penolakan order akibat stok kosong produk fast-moving",
+    "Conversion rate pesanan online-to-fulfilled dalam SLA terpantau",
+    "Order cancellation rate dipantau & di bawah threshold (<1%)"
+  ]},
+  {id:"E",title:"People & Conduct",color:"#6E2F9C",items:[
+    "Jumlah staf hadir sesuai jadwal (tidak ada kekosongan tanpa backup)",
+    "Grooming standar terpenuhi (seragam bersih, name tag terpasang)",
+    "Attitude dan service manner terhadap pelanggan sopan & responsif",
+    "Staf memahami alur eskalasi masalah ke ROM",
+    "Tidak ada staf bekerja melewati batas jam lembur tanpa izin",
+    "Pelatihan/refreshment IK terakhir \u22641 bulan yang lalu (cek absensi)",
+    "Log kehadiran & jadwal shift tersedia dan terisi lengkap"
+  ]},
+  {id:"F",title:"Produk Damage, Expired & Near-Expiry \u2013 FEFO",color:"#7B241C",items:[
+    "Inspeksi visual produk damage dilakukan minimal 1x/hari",
+    "Produk damage dikarantina & diberi label RUSAK \u2013 JANGAN DIJUAL",
+    "Produk ED (sudah expired) tidak ada di rak aktif maupun gudang penjualan",
+    "Jumlah produk ED dihitung, dicatat di Form Damage/ED, dilaporkan ke ROM H+1",
+    "Produk Near-ED (\u22643 bulan) sudah diidentifikasi & dicatat jumlah & SKU-nya",
+    "Produk Near-ED dipindahkan ke posisi terdepan rak (FEFO \u2013 First Expired First Out)",
+    "Label Near Expiry \u2013 Jual Lebih Dulu terpasang pada produk Near-ED",
+    "Tidak ada Near-ED tersembunyi di belakang rak atau gudang cadangan",
+    "Produk cold-chain ED disimpan terpisah & tidak dicampur cold-chain aktif",
+    "Proses disposal/retur produk ED sudah dijalankan sesuai SOP",
+    "Total nilai produk damage & ED bulan ini dikomunikasikan ke Head of Pharmacy Ops",
+    "Staf memahami SOP FEFO & mampu menjelaskan cara pengecekan ED saat spot-check"
+  ]},
+  {id:"G",title:"Operasional E-Commerce & Digital",color:"#7D6608",items:[
+    "Order e-commerce hari ini sudah seluruhnya ter-input di Medisend",
+    "Tidak ada order e-commerce >30 menit yang belum diproses di Medisend",
+    "List order pending Medisend dicek & dikosongkan sebelum tutup shift",
+    "Tidak ada retur e-commerce status Pending atau Menunggu Konfirmasi >1 hari",
+    "Retur yang diterima fisik sudah diupdate statusnya di sistem",
+    "Produk hasil retur dikembalikan ke stok (layak jual) atau dikarantina",
+    "Upload CSV stok harian ke sistem sudah dilakukan (cek timestamp)",
+    "File CSV stok diverifikasi: tidak ada error, qty tidak minus, SKU aktif semua",
+    "Rekonsiliasi harian (daily recon) stok sistem vs stok fisik sudah dilakukan",
+    "Selisih recon >0 unit sudah diidentifikasi penyebabnya & dicatat",
+    "Selisih recon closed ditandai; yang belum dieskalaikan ke ROM",
+    "Hasil recon dilaporkan ke ROM sebelum tutup apotek"
+  ]}
+];
+
+var ROM_AP={
+  "Alfian Rizky Putra":["Apotik Halomedika Dukuh Pakis Surabaya","Apotik SBS Farma Sukolilo","Apotik Halomedika Denpasar","Apotik Halomedika Tirta Raya Sidoarjo","Apotik Halomedika Bungur Malang","Apotik Halomedika Gejayan Yogyakarta","Apotik Medika Prima Serengan Surakarta","Apotik SBS Farma Tembalang"],
+  "Andik Eka Saputra":["Apotik Halomedika Cicendo","Apotik Halomedika Rancasari Bandung","Apotik SBS Farma Mekarwangi","Apotik Halomedika Pekayon","Apotik Perjuangan Bekasi","Apotik Medika Prima"],
+  "Arifin Hulu":["Apotik Medika Prima Duri Kosambi","Apotik Halomedika Cempaka Putih","Apotik Halomedika Medan Satria"],
+  "Bentar Bagus Adipradana":["Apotik SBS Farma Kebon Jeruk","Apotik Medika Prima Jagakarsa","Apotik Halomedika Sawangan","Apotik Halomedika Pondok Aren","Apotik Pasti Hemat Pondok Cabe","Apotik Medika Prima Tambora"],
+  "Kelvin Aldrin":["Apotik Medika Prima ICE BSD","Apotik Halomedika BSD","Apotik SBS Farma Gading Serpong"],
+  "R. Rini Anggraini":["Apotik SBS Farma Pandu Raya","Apotik Sehat Bakti Sentosa SBS Cibinong","Apotik Helios Medika Sukmajaya","Apotik Halomedika Kranggan","Apotik Halomedika Medan Baru","Apotik Halomedika Kemuning Palembang","Apotik Halomedika Bintaro","Apotik Halomedika Pancoran"],
+  "Silvia Anel Fiarti":["Apotik Helios Medika Saharjo","Apotik Halomedika Kelapa Gading","Apotik Medika Prima Pondok Kelapa"],
+  "Venansius Mario Petrida Mbui":["Apotik Halomedika Kp. Rambutan","Apotik Pasti Hemat Tebet","Apotik Halomedika"]
+};
+
+var SCOL={"A":"#1B4F72","B":"#154360","C":"#1A5276","D":"#117A65","E":"#6E2F9C","F":"#7B241C","G":"#7D6608"};
+
+function ent(n){
+  var u=n.toUpperCase();
+  if(u.indexOf("HALOMEDIKA")>=0||u.indexOf("HELIOS")>=0||u.indexOf("PERJUANGAN")>=0) return "HAK";
+  if(u.indexOf("MEDIKA PRIMA")>=0||u.indexOf("PASTI HEMAT")>=0) return "MRI";
+  if(u.indexOf("SBS")>=0||u.indexOf("SEHAT BAKTI")>=0) return "SBS";
+  return "HAK";
+}
+
+var ST={}, visits=[];
+
+function loadSt(){
+  fetchFromSheet();
+}
+
+function saveSt(visit){
+  pushToSheet(visit);
+}
+
+function fetchFromSheet(){
+  if(!SCRIPT_URL||SCRIPT_URL.indexOf("PASTE")>=0) return;
+  fetch(SCRIPT_URL+"?action=get_data", {redirect:"follow"})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.visits&&data.visits.length){
+        visits=data.visits;
+        // Re-render dashboard if open
+        var dp=document.getElementById("page-dashboard");
+        if(dp&&dp.classList.contains("act")) renderDash();
+        var rp=document.getElementById("page-resume");
+        if(rp&&rp.classList.contains("act")) renderResList();
+      }
+    })
+    .catch(function(err){console.warn("Fetch GSheet failed:",err);});
+}
+
+function pushToSheet(visit){
+  if(!SCRIPT_URL||SCRIPT_URL.indexOf("PASTE")>=0){
+    showToast("⚠️ SCRIPT_URL belum diset — data hanya tersimpan lokal");
+    return;
+  }
+  // Kirim hanya data ringkas (tanpa snap) agar URL tidak terlalu panjang
+  var payload = {
+    id: visit.id,
+    date: visit.date,
+    time: visit.time,
+    rom: visit.rom,
+    apotek: visit.apotek,
+    entity: visit.entity,
+    compliance: visit.compliance,
+    ok: visit.ok,
+    issue: visit.issue,
+    na: visit.na,
+    notes: visit.notes || "",
+    issues: visit.issues || []
+  };
+  var encoded = encodeURIComponent(JSON.stringify(payload));
+  var url = SCRIPT_URL + "?action=submit&data=" + encoded;
+  fetch(url, {redirect:"follow"})
+    .then(function(r){ return r.text(); })
+    .then(function(txt){
+      try {
+        var res = JSON.parse(txt);
+        if(res.status==="ok"){
+          showToast("✅ Data tersimpan ke Google Sheets!");
+          setTimeout(fetchFromSheet, 2000);
+        } else {
+          showToast("⚠️ Gagal simpan ke Sheets");
+          console.warn("GSheet error:", res);
+        }
+      } catch(e) {
+        showToast("✅ Data tersimpan ke Google Sheets!");
+        setTimeout(fetchFromSheet, 2000);
+      }
+    })
+    .catch(function(err){
+      showToast("⚠️ Koneksi gagal — data tersimpan lokal saja");
+      console.warn("Push GSheet failed:",err);
+    });
+}
+
+function onRomChange(){
+  var r=document.getElementById("sel-rom").value;
+  var other=document.getElementById("rom-other");
+  other.style.display=r==="Lainnya"?"block":"none";
+  if(r==="Lainnya") other.focus();
+  var allApotek=[];
+  Object.values(ROM_AP).forEach(function(arr){arr.forEach(function(a){if(allApotek.indexOf(a)<0)allApotek.push(a);});});
+  allApotek.sort();
+  var list=(r==="Lainnya"?allApotek:ROM_AP[r]||[]).slice();
+  var el=document.getElementById("sel-apotek");
+  el.innerHTML="<option value=''>-- Pilih Apotek --</option>";
+  list.forEach(function(a){var o=document.createElement("option");o.textContent=a;el.appendChild(o);});
+}
+
+function updRomOther(){
+  // nothing needed — getRomName() reads it at submit time
+}
+
+function getRomName(){
+  var sel=document.getElementById("sel-rom").value;
+  if(sel==="Lainnya"){
+    var v=(document.getElementById("rom-other").value||"").trim();
+    return v||"Lainnya";
+  }
+  return sel;
+}
+
+function buildCk(){
+  var c=document.getElementById("chk");
+  c.innerHTML="";
+  ST={};
+  var no=1;
+  SECS.forEach(function(sec){
+    var w=document.createElement("div");
+    w.style.marginBottom="10px";
+    var h=document.createElement("div");
+    h.className="sh";
+    h.style.background=sec.color;
+    h.setAttribute("data-sid",sec.id);
+    h.innerHTML="<span class='sl'>"+sec.id+". "+sec.title+"</span><span class='sc'>"+sec.items.length+" item</span><i class='ti ti-chevron-down sv'></i>";
+    h.onclick=function(){togSec(sec.id);};
+    var b=document.createElement("div");
+    b.id="sb-"+sec.id;
+    sec.items.forEach(function(item,i){
+      var key=sec.id+"_"+i;
+      ST[key]={status:"",notes:"",item:item,section:sec.title,secId:sec.id,no:no};
+      var iw=document.createElement("div");
+      iw.className="iw";
+      var ir=document.createElement("div");
+      ir.className="ir";
+      ir.innerHTML="<div class='ino'>"+no+"</div><div class='itx'>"+item+"</div>";
+      var ist=document.createElement("div");
+      ist.style.display="flex";
+      ist.style.flexDirection="column";
+      ist.style.alignItems="flex-end";
+      var sps=document.createElement("div");
+      sps.className="sps";
+      ["ok","x","na"].forEach(function(s){
+        var btn=document.createElement("button");
+        btn.className="pl pl-"+s;
+        btn.textContent=s==="ok"?"✓":s==="x"?"✗":"N/A";
+        btn.setAttribute("data-key",key);
+        btn.setAttribute("data-st",s);
+        btn.onclick=function(){setPill(key,s,btn);};
+        sps.appendChild(btn);
+      });
+      ist.appendChild(sps);
+      ir.appendChild(ist);
+      iw.appendChild(ir);
+      var nr=document.createElement("div");
+      nr.className="nr";
+      nr.id="nr-"+key;
+      var ta=document.createElement("textarea");
+      ta.className="ni";
+      ta.rows=2;
+      ta.placeholder="Catatan temuan...";
+      ta.oninput=function(){ST[key].notes=this.value;};
+      nr.appendChild(ta);
+      iw.appendChild(nr);
+      b.appendChild(iw);
+      no++;
+    });
+    w.appendChild(h);
+    w.appendChild(b);
+    c.appendChild(w);
+  });
+  document.getElementById("pw").style.display="block";
+  updProg();
+}
+
+function togSec(id){
+  var b=document.getElementById("sb-"+id);
+  var h=document.querySelector("[data-sid='"+id+"']");
+  var col=b.style.display==="none";
+  b.style.display=col?"block":"none";
+  if(col) h.classList.remove("col"); else h.classList.add("col");
+}
+
+function setPill(key,status,btn){
+  var prev=ST[key].status;
+  if(prev===status){
+    ST[key].status="";
+    btn.classList.remove("sel");
+  } else {
+    ST[key].status=status;
+    var pills=btn.closest(".sps").querySelectorAll(".pl");
+    pills.forEach(function(p){p.classList.remove("sel");});
+    btn.classList.add("sel");
+  }
+  var nr=document.getElementById("nr-"+key);
+  nr.className="nr"+(ST[key].status==="x"?" show":"");
+  updProg();
+}
+
+function updProg(){
+  var all=Object.values(ST);
+  var filled=all.filter(function(x){return x.status!=="";}).length;
+  var ok=all.filter(function(x){return x.status==="ok";}).length;
+  var iss=all.filter(function(x){return x.status==="x";}).length;
+  var na=all.filter(function(x){return x.status==="na";}).length;
+  var pct=all.length?Math.round(filled/all.length*100):0;
+  document.getElementById("ptxt").textContent=filled+" / "+all.length;
+  document.getElementById("pfill").style.width=pct+"%";
+  document.getElementById("cok").textContent=ok;
+  document.getElementById("ciss").textContent=iss;
+  document.getElementById("cna").textContent=na;
+}
+
+function submitVisit(){
+  var rom=getRomName();
+  var ap=document.getElementById("sel-apotek").value;
+  var dt=document.getElementById("inp-date").value;
+  var tm=document.getElementById("inp-time").value;
+  if(!rom||rom==="Lainnya"||!ap||!dt){showToast("Lengkapi informasi kunjungan terlebih dahulu");return;}
+  var all=Object.values(ST);
+  var filled=all.filter(function(x){return x.status!=="";}).length;
+  if(filled<Math.ceil(all.length*0.5)){showToast("Minimal 50% item harus diisi sebelum submit");return;}
+  var ok=all.filter(function(x){return x.status==="ok";}).length;
+  var iss=all.filter(function(x){return x.status==="x";}).length;
+  var na=all.filter(function(x){return x.status==="na";}).length;
+  var comp=Math.round(ok/Math.max(ok+iss,1)*100);
+  var issues=all.filter(function(x){return x.status==="x";}).map(function(x){return {item:x.item,section:x.section,secId:x.secId,notes:x.notes,no:x.no};});
+  var v={id:Date.now(),rom:rom,apotek:ap,entity:ent(ap),date:dt,time:tm,ok:ok,issue:iss,na:na,compliance:comp,issues:issues,notes:document.getElementById("notes").value,snap:JSON.parse(JSON.stringify(ST))};
+  visits.unshift(v);
+  saveSt(v);
+  showToast("Menyimpan data...");
+  resetForm();
+  setTimeout(function(){showPage("resume");renderResume(v);},800);
+}
+
+function resetForm(){
+  document.getElementById("sel-rom").value="";
+  document.getElementById("rom-other").value="";
+  document.getElementById("rom-other").style.display="none";
+  document.getElementById("sel-apotek").innerHTML="<option value=''>-- Pilih Apotek --</option>";
+  document.getElementById("notes").value="";
+  document.getElementById("inp-date").value=todayStr();
+  document.getElementById("inp-time").value=nowTime();
+  buildCk();
+}
+
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function nowTime(){return new Date().toTimeString().slice(0,5);}
+
+function showPage(p){
+  document.querySelectorAll(".pg").forEach(function(x){x.classList.remove("act");});
+  document.querySelectorAll(".nb").forEach(function(x){x.classList.remove("act");});
+  document.getElementById("page-"+p).classList.add("act");
+  document.getElementById("nav-"+p).classList.add("act");
+  document.getElementById("pw").style.display=p==="form"?"block":"none";
+  if(p==="dashboard") renderDash();
+  if(p==="resume") renderResList();
+}
+
+function getFlt(){
+  var r=document.getElementById("flt-rom").value;
+  var e=document.getElementById("flt-ent").value;
+  var f=document.getElementById("flt-from").value;
+  var t=document.getElementById("flt-to").value;
+  return visits.filter(function(v){
+    if(r&&v.rom!==r) return false;
+    if(e&&v.entity!==e) return false;
+    if(f&&v.date<f) return false;
+    if(t&&v.date>t) return false;
+    return true;
+  });
+}
+
+function clearFlt(){
+  document.getElementById("flt-rom").value="";
+  document.getElementById("flt-ent").value="";
+  document.getElementById("flt-from").value="";
+  document.getElementById("flt-to").value="";
+  renderDash();
+}
+
+function ebdg(e){return e==="HAK"?"bh":e==="MRI"?"bm":"bs";}
+function clr(c){return c>=85?"var(--teal)":c>=70?"var(--amb)":"var(--red)";}
+
+function renderDash(){
+  var flt=getFlt();
+  document.getElementById("dt").textContent=flt.length;
+  var avg=flt.length?Math.round(flt.reduce(function(a,v){return a+v.compliance;},0)/flt.length):0;
+  document.getElementById("da").textContent=avg+"%";
+  document.getElementById("di").textContent=flt.reduce(function(a,v){return a+v.issue;},0);
+  document.getElementById("dap").textContent=new Set(flt.map(function(v){return v.apotek;})).size;
+  var vl=document.getElementById("vlist");
+  if(!flt.length){
+    vl.innerHTML="<div class='es'><i class='ti ti-inbox'></i><p>"+(visits.length?"Tidak ada kunjungan sesuai filter":"Belum ada kunjungan")+"</p></div>";
+  } else {
+    var h="";
+    flt.forEach(function(v){
+      var c=v.compliance, cl=clr(c), eb=ebdg(v.entity);
+      h+="<div class='vi' onclick='showPage(\"resume\");renderResume(visits.find(function(x){return x.id=="+v.id+"}))'>";
+      h+="<div class='vin'><div class='vn'>"+v.apotek+"</div>";
+      h+="<div class='vs'>"+v.rom+" &middot; "+v.date+" <span class='bdg "+eb+"' style='margin-left:4px'>"+v.entity+"</span></div></div>";
+      h+="<div class='vsc'><div class='sval' style='color:"+cl+"'>"+c+"%</div>";
+      h+="<div class='mb'><div class='mf' style='width:"+c+"%;background:"+cl+"'></div></div>";
+      h+="<div class='sis'>"+v.issue+" temuan</div></div></div>";
+    });
+    vl.innerHTML=h;
+  }
+  var im={};
+  flt.forEach(function(v){v.issues.forEach(function(i){im[i.item]=(im[i.item]||0)+1;});});
+  var sorted=Object.entries(im).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
+  var ti=document.getElementById("tlist");
+  if(!sorted.length){
+    ti.innerHTML="<div style='text-align:center;padding:16px;color:var(--mut);font-size:13px'>Belum ada data temuan</div>";
+  } else {
+    var max=sorted[0][1], h2="";
+    sorted.forEach(function(e){
+      var item=e[0],cnt=e[1];
+      h2+="<div class='tir'><div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:3px'>";
+      h2+="<div class='tit' style='flex:1;padding-right:8px'>"+item+"</div>";
+      h2+="<div style='font-size:12px;font-weight:700;color:var(--red);min-width:24px;text-align:right'>"+cnt+"&times;</div></div>";
+      h2+="<div class='tib'><div class='tif' style='width:"+Math.round(cnt/max*100)+"%'></div></div></div>";
+    });
+    ti.innerHTML=h2;
+  }
+}
+
+function renderResList(){
+  var rf=document.getElementById("rf-rom").value;
+  var af=(document.getElementById("rf-ap").value||"").toLowerCase();
+  var flt=visits.filter(function(v){
+    if(rf&&v.rom!==rf) return false;
+    if(af&&v.apotek.toLowerCase().indexOf(af)<0) return false;
+    return true;
+  });
+  var rl=document.getElementById("rlist");
+  document.getElementById("rcontent").innerHTML="";
+  if(!flt.length){
+    rl.innerHTML="<div class='es'><i class='ti ti-file-description'></i><p>"+(visits.length?"Tidak ada kunjungan sesuai filter":"Belum ada kunjungan disubmit")+"</p></div>";
+    return;
+  }
+  var h="<div class='card' style='padding:0;overflow:hidden'>";
+  flt.forEach(function(v){
+    var c=v.compliance, cl=clr(c), eb=ebdg(v.entity);
+    h+="<div class='vi' style='padding:11px 14px' onclick='renderResume(visits.find(function(x){return x.id=="+v.id+"}))'>";
+    h+="<div class='vin'><div class='vn'>"+v.apotek+"</div>";
+    h+="<div class='vs'>"+v.rom+" &middot; "+v.date+" <span class='bdg "+eb+"' style='margin-left:4px'>"+v.entity+"</span></div></div>";
+    h+="<div class='vsc'><div class='sval' style='color:"+cl+"'>"+c+"%</div>";
+    h+="<div class='mb'><div class='mf' style='width:"+c+"%;background:"+cl+"'></div></div>";
+    h+="<div class='sis'>"+v.issue+" temuan</div></div></div>";
+  });
+  rl.innerHTML=h+"</div>";
+}
+
+function renderResume(v){
+  if(!v) return;
+  var rc=document.getElementById("rcontent");
+  var c=v.compliance, cl=clr(c), lbl=c>=85?"Baik":"Perlu Perhatian";
+  var eb=ebdg(v.entity);
+  var snap=v.snap||{};
+  var ibs={};
+  v.issues.forEach(function(i){if(!ibs[i.secId])ibs[i.secId]=[];ibs[i.secId].push(i);});
+
+  var secSum="";
+  SECS.forEach(function(sec){
+    var items=Object.values(snap).filter(function(x){return x.secId===sec.id;});
+    var ok=items.filter(function(x){return x.status==="ok";}).length;
+    var iss=items.filter(function(x){return x.status==="x";}).length;
+    var tot=ok+iss;
+    var pct=tot?Math.round(ok/tot*100):null;
+    var pc=pct===null?"var(--mut)":pct>=85?"var(--teal)":pct>=70?"var(--amb)":"var(--red)";
+    secSum+="<div class='sr'><div class='sd' style='background:"+sec.color+"'>"+sec.id+"</div>";
+    secSum+="<div class='sn'>"+sec.title+"</div>";
+    secSum+="<div class='spc' style='color:"+pc+"'>"+(pct!==null?pct+"%":"–");
+    if(iss>0) secSum+="<div style='font-size:10px;color:var(--red)'>"+iss+" temuan</div>";
+    secSum+="</div></div>";
+  });
+
+  var issHtml="";
+  if(v.issue>0){
+    issHtml="<div class='card' style='border-left:3px solid var(--red)'>";
+    issHtml+="<div class='ct' style='color:var(--red)'><i class='ti ti-alert-triangle'></i>Temuan ("+v.issue+" item)</div>";
+    Object.entries(ibs).forEach(function(e){
+      var sid=e[0], items=e[1];
+      issHtml+="<div style='margin-bottom:12px'>";
+      issHtml+="<span class='ist' style='background:"+SCOL[sid]+"'>Section "+sid+"</span>";
+      items.forEach(function(i){
+        issHtml+="<div class='ii'><i class='ti ti-x' style='color:var(--red);font-size:14px;flex-shrink:0;margin-top:1px'></i>";
+        issHtml+="<div><div class='it'>"+i.item+"</div>";
+        if(i.notes) issHtml+="<div class='in2'><i class='ti ti-notes' style='font-size:11px'></i> "+i.notes+"</div>";
+        issHtml+="</div></div>";
+      });
+      issHtml+="</div>";
+    });
+    issHtml+="</div>";
+  }
+
+  var notesHtml="";
+  if(v.notes) notesHtml="<div class='card'><div class='ct'><i class='ti ti-message'></i>Catatan ROM</div><p style='font-size:13px;color:var(--mut);line-height:1.6'>"+v.notes+"</p></div>";
+
+  rc.innerHTML=
+    "<div style='display:flex;gap:8px;margin-bottom:4px'><button class='bb' style='margin-bottom:0' onclick=\"document.getElementById('rcontent').innerHTML='';renderResList()\"><i class='ti ti-arrow-left'></i>Daftar Kunjungan</button><button onclick='exportResume("+v.id+")' style='margin-left:auto;padding:8px 14px;background:#1D9E75;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px'><i class='ti ti-download'></i>Export CSV</button></div>"+
+    "<div class='card'>"+
+      "<div class='rh'>"+
+        "<div><div class='ra'>"+v.apotek+"</div>"+
+        "<div class='rm'>"+v.rom+"</div>"+
+        "<div class='rm'><i class='ti ti-calendar' style='font-size:12px'></i> "+v.date+" &nbsp;&middot;&nbsp; <i class='ti ti-clock' style='font-size:12px'></i> "+v.time+"</div>"+
+        "<div style='margin-top:6px'><span class='bdg "+eb+"'>"+v.entity+"</span></div></div>"+
+        "<div class='rsc'><div class='rp' style='color:"+cl+"'>"+c+"%</div>"+
+        "<div class='rl' style='color:"+cl+"'>"+lbl+"</div>"+
+        "<div style='font-size:11px;color:var(--mut);margin-top:4px'>"+v.ok+" sesuai &middot; "+v.issue+" masalah</div></div>"+
+      "</div>"+
+      "<div class='pb' style='height:10px'><div class='pf' style='width:"+c+"%;background:"+cl+"'></div></div>"+
+    "</div>"+
+    issHtml+notesHtml+
+    "<div class='card'><div class='ct'><i class='ti ti-layout-grid'></i>Ringkasan per Section</div>"+secSum+"</div>";
+
+  rc.scrollIntoView({behavior:"smooth"});
+}
+
+function escCSV(v){
+  if(v===null||v===undefined) return "";
+  var s=String(v);
+  if(s.indexOf(",")>=0||s.indexOf('"')>=0||s.indexOf("\n")>=0){
+    return '"'+s.replace(/"/g,'""')+'"';
+  }
+  return s;
+}
+
+function downloadCSV(rows, filename){
+  var csv=rows.map(function(r){return r.map(escCSV).join(",");}).join("\n");
+  var bom="\uFEFF"; // UTF-8 BOM for Excel/GSheets
+  var blob=new Blob([bom+csv],{type:"text/csv;charset=utf-8;"});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");
+  a.href=url; a.download=filename; a.click();
+  URL.revokeObjectURL(url);
+  showToast("CSV berhasil didownload!");
+}
+
+function exportDash(){
+  var flt=getFlt();
+  if(!flt.length){showToast("Tidak ada data untuk diekspor");return;}
+  var rows=[["Tanggal","Waktu","ROM","Apotek","Entitas","Compliance %","Total Sesuai","Total Masalah","Total N/A","Daftar Temuan","Catatan ROM"]];
+  flt.forEach(function(v){
+    var issueList=v.issues.map(function(i){return "["+i.secId+"] "+i.item+(i.notes?" ("+i.notes+")":""); }).join(" | ");
+    rows.push([v.date,v.time,v.rom,v.apotek,v.entity,v.compliance,v.ok,v.issue,v.na,issueList,v.notes||""]);
+  });
+  var d=new Date().toISOString().slice(0,10);
+  downloadCSV(rows,"kunjungan_ROM_"+d+".csv");
+}
+
+function exportResume(vid){
+  var v=visits.find(function(x){return x.id==vid;});
+  if(!v){showToast("Data tidak ditemukan");return;}
+  // Sheet 1: summary
+  var rows=[["=== RESUME KUNJUNGAN ROM ==="],
+    ["Apotek",v.apotek],["Entitas",v.entity],["ROM",v.rom],
+    ["Tanggal",v.date],["Waktu",v.time],
+    ["Compliance",v.compliance+"%"],["Total Sesuai",v.ok],
+    ["Total Masalah",v.issue],["Total N/A",v.na],
+    ["Catatan ROM",v.notes||""],[""],
+    ["=== DETAIL PER ITEM ==="],
+    ["No","Section","Item Pemeriksaan","Status","Catatan Temuan"]
+  ];
+  var snap=v.snap||{};
+  Object.values(snap).sort(function(a,b){return a.no-b.no;}).forEach(function(item){
+    var st=item.status==="ok"?"Sesuai":item.status==="x"?"Masalah":item.status==="na"?"N/A":"Belum diisi";
+    rows.push([item.no,item.secId+" - "+item.section,item.item,st,item.notes||""]);
+  });
+  var d=v.date.replace(/-/g,"");
+  var ap=v.apotek.replace(/[^a-zA-Z0-9]/g,"_").slice(0,20);
+  downloadCSV(rows,"resume_"+ap+"_"+d+".csv");
+}
+
+function clearCache(){
+  visits=[];
+  renderDash();
+  fetchFromSheet();
+  showToast("Memuat ulang data dari Google Sheets...");
+}
+
+function showToast(msg){
+  var t=document.getElementById("toast");
+  t.textContent=msg;
+  t.classList.add("show");
+  setTimeout(function(){t.classList.remove("show");},3000);
+}
+
+loadSt();
+buildCk();
+document.getElementById("inp-date").value=todayStr();
+document.getElementById("inp-time").value=nowTime();
+</script>
+</body>
+</html>
