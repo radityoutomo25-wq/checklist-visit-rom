@@ -114,10 +114,14 @@ textarea.ni{font-size:12px;resize:none;border-color:var(--red);padding:7px 10px}
       <div class="fg"><div class="fl">Nama ROM</div>
         <select id="sel-rom" onchange="onRomChange()">
           <option value="">-- Pilih ROM --</option>
-          <option>Alfian Rizky Putra</option><option>Andik Eka Saputra</option>
-          <option>Arifin Hulu</option><option>Bentar Bagus Adipradana</option>
-          <option>Kelvin Aldrin</option><option>R. Rini Anggraini</option>
-          <option>Silvia Anel Fiarti</option><option>Venansius Mario Petrida Mbui</option>
+                    <option>Alfian Rizky Putra</option>
+          <option>Andik Eka Saputra</option>
+          <option>Arifin Hulu</option>
+          <option>Bentar Bagus Adipradana</option>
+          <option>Venansius Mario Petrida Mbui</option>
+          <option>Kelvin Aldrin</option>
+          <option>R. Rini Anggraini</option>
+          <option>Silvia Anel Fiarti</option>
           <option disabled style="color:#ccc">──────────</option>
           <option>Lainnya</option>
         </select>
@@ -162,10 +166,14 @@ textarea.ni{font-size:12px;resize:none;border-color:var(--red);padding:7px 10px}
       <div><div class="fl">ROM</div>
         <select id="flt-rom" onchange="renderDash()">
           <option value="">Semua ROM</option>
-          <option>Alfian Rizky Putra</option><option>Andik Eka Saputra</option>
-          <option>Arifin Hulu</option><option>Bentar Bagus Adipradana</option>
-          <option>Kelvin Aldrin</option><option>R. Rini Anggraini</option>
-          <option>Silvia Anel Fiarti</option><option>Venansius Mario Petrida Mbui</option>
+                    <option>Alfian Rizky Putra</option>
+          <option>Andik Eka Saputra</option>
+          <option>Arifin Hulu</option>
+          <option>Bentar Bagus Adipradana</option>
+          <option>Venansius Mario Petrida Mbui</option>
+          <option>Kelvin Aldrin</option>
+          <option>R. Rini Anggraini</option>
+          <option>Silvia Anel Fiarti</option>
           <option disabled style="color:#ccc">──────────</option>
           <option>Lainnya</option>
         </select>
@@ -205,10 +213,14 @@ textarea.ni{font-size:12px;resize:none;border-color:var(--red);padding:7px 10px}
       <div><div class="fl">ROM</div>
         <select id="rf-rom" onchange="renderResList()">
           <option value="">Semua ROM</option>
-          <option>Alfian Rizky Putra</option><option>Andik Eka Saputra</option>
-          <option>Arifin Hulu</option><option>Bentar Bagus Adipradana</option>
-          <option>Kelvin Aldrin</option><option>R. Rini Anggraini</option>
-          <option>Silvia Anel Fiarti</option><option>Venansius Mario Petrida Mbui</option>
+                    <option>Alfian Rizky Putra</option>
+          <option>Andik Eka Saputra</option>
+          <option>Arifin Hulu</option>
+          <option>Bentar Bagus Adipradana</option>
+          <option>Venansius Mario Petrida Mbui</option>
+          <option>Kelvin Aldrin</option>
+          <option>R. Rini Anggraini</option>
+          <option>Silvia Anel Fiarti</option>
           <option disabled style="color:#ccc">──────────</option>
           <option>Lainnya</option>
         </select>
@@ -313,18 +325,63 @@ var SECS=[
 
 var ROM_AP={
   "Alfian Rizky Putra":["Apotik Halomedika Dukuh Pakis Surabaya","Apotik SBS Farma Sukolilo","Apotik Halomedika Denpasar","Apotik Halomedika Tirta Raya Sidoarjo","Apotik Halomedika Bungur Malang","Apotik Halomedika Gejayan Yogyakarta","Apotik Medika Prima Serengan Surakarta","Apotik SBS Farma Tembalang"],
-  "Andik Eka Saputra":["Apotik Halomedika Cicendo","Apotik Halomedika Rancasari Bandung","Apotik SBS Farma Mekarwangi","Apotik Halomedika Pekayon","Apotik Perjuangan Bekasi","Apotik Medika Prima"],
+  "Andik Eka Saputra":["Apotik Halomedika Cicendo","Apotik Halomedika Rancasari Bandung","Apotik SBS Farma Mekarwangi","Apotik Halomedika Pekayon","Apotik Halomedika Perjuangan Bekasi","Apotik Medika Prima"],
   "Arifin Hulu":["Apotik Medika Prima Duri Kosambi","Apotik Halomedika Cempaka Putih","Apotik Halomedika Medan Satria"],
   "Bentar Bagus Adipradana":["Apotik SBS Farma Kebon Jeruk","Apotik Medika Prima Jagakarsa","Apotik Halomedika Sawangan","Apotik Halomedika Pondok Aren","Apotik Pasti Hemat Pondok Cabe","Apotik Medika Prima Tambora"],
+  "Venansius Mario Petrida Mbui":["Apotik Halomedika Kp. Rambutan","Apotik Pasti Hemat Tebet","Apotik Halomedika"],
   "Kelvin Aldrin":["Apotik Medika Prima ICE BSD","Apotik Halomedika BSD","Apotik SBS Farma Gading Serpong"],
   "R. Rini Anggraini":["Apotik SBS Farma Pandu Raya","Apotik Sehat Bakti Sentosa SBS Cibinong","Apotik Helios Medika Sukmajaya","Apotik Halomedika Kranggan","Apotik Halomedika Medan Baru","Apotik Halomedika Kemuning Palembang","Apotik Halomedika Bintaro","Apotik Halomedika Pancoran"],
   "Silvia Anel Fiarti":["Apotik Helios Medika Saharjo","Apotik Halomedika Kelapa Gading","Apotik Medika Prima Pondok Kelapa"],
-  "Venansius Mario Petrida Mbui":["Apotik Halomedika Kp. Rambutan","Apotik Pasti Hemat Tebet","Apotik Halomedika"]
+  "Lainnya":[]
 };
 
 var SCOL={"A":"#1B4F72","B":"#154360","C":"#1A5276","D":"#117A65","E":"#6E2F9C","F":"#7B241C","G":"#7D6608"};
 
+var ENTITY_MAP={
+  "Apotik Halomedika Dukuh Pakis Surabaya":"SBS",
+  "Apotik SBS Farma Sukolilo":"SBS",
+  "Apotik Halomedika Denpasar":"HAK",
+  "Apotik Halomedika Tirta Raya Sidoarjo":"HAK",
+  "Apotik Halomedika Bungur Malang":"HAK",
+  "Apotik Halomedika Gejayan Yogyakarta":"HAK",
+  "Apotik Medika Prima Serengan Surakarta":"MRI",
+  "Apotik SBS Farma Tembalang":"MRI",
+  "Apotik Halomedika Cicendo":"HAK",
+  "Apotik Halomedika Rancasari Bandung":"HAK",
+  "Apotik SBS Farma Mekarwangi":"SBS",
+  "Apotik Halomedika Pekayon":"HAK",
+  "Apotik Halomedika Perjuangan Bekasi":"SBS",
+  "Apotik Medika Prima":"MRI",
+  "Apotik Medika Prima Duri Kosambi":"MRI",
+  "Apotik Halomedika Cempaka Putih":"MRI",
+  "Apotik Halomedika Medan Satria":"HAK",
+  "Apotik SBS Farma Kebon Jeruk":"SBS",
+  "Apotik Medika Prima Jagakarsa":"MRI",
+  "Apotik Halomedika Sawangan":"SBS",
+  "Apotik Halomedika Pondok Aren":"HAK",
+  "Apotik Pasti Hemat Pondok Cabe":"MRI",
+  "Apotik Medika Prima Tambora":"MRI",
+  "Apotik Halomedika Kp. Rambutan":"HAK",
+  "Apotik Pasti Hemat Tebet":"SBS",
+  "Apotik Halomedika":"HAK",
+  "Apotik Medika Prima ICE BSD":"MRI",
+  "Apotik Halomedika BSD":"HAK",
+  "Apotik SBS Farma Gading Serpong":"SBS",
+  "Apotik SBS Farma Pandu Raya":"SBS",
+  "Apotik Sehat Bakti Sentosa SBS Cibinong":"SBS",
+  "Apotik Helios Medika Sukmajaya":"HAK",
+  "Apotik Halomedika Kranggan":"HAK",
+  "Apotik Halomedika Medan Baru":"HAK",
+  "Apotik Halomedika Kemuning Palembang":"HAK",
+  "Apotik Halomedika Bintaro":"HAK",
+  "Apotik Halomedika Pancoran":"HAK",
+  "Apotik Helios Medika Saharjo":"HAK",
+  "Apotik Halomedika Kelapa Gading":"HAK",
+  "Apotik Medika Prima Pondok Kelapa":"MRI"
+};
+
 function ent(n){
+  if(ENTITY_MAP[n]) return ENTITY_MAP[n];
   var u=n.toUpperCase();
   if(u.indexOf("HALOMEDIKA")>=0||u.indexOf("HELIOS")>=0||u.indexOf("PERJUANGAN")>=0) return "HAK";
   if(u.indexOf("MEDIKA PRIMA")>=0||u.indexOf("PASTI HEMAT")>=0) return "MRI";
