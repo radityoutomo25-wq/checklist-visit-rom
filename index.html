@@ -227,6 +227,11 @@ textarea.ni{font-size:12px;resize:none;border-color:var(--red);padding:7px 10px}
       </div>
       <div><div class="fl">Cari Apotek</div><input type="text" id="rf-ap" placeholder="Nama apotek..." oninput="renderResList()"></div>
     </div>
+    <div class="fr" style="margin-top:0">
+      <div><div class="fl">Dari Tanggal</div><input type="date" id="rf-from" onchange="renderResList()"></div>
+      <div><div class="fl">Sampai Tanggal</div><input type="date" id="rf-to" onchange="renderResList()"></div>
+    </div>
+    <button onclick="clearResFilter()" style="width:100%;padding:7px;font-size:12px;background:transparent;border:1px solid var(--bdr);border-radius:var(--rs);color:var(--mut);cursor:pointer;margin-top:8px"><i class="ti ti-x" style="font-size:12px"></i> Reset Filter</button>
   </div>
   <div id="rlist"></div>
   <div id="rcontent"></div>
@@ -746,12 +751,25 @@ function renderDash(){
   }
 }
 
+function clearResFilter(){
+  document.getElementById("rf-rom").value="";
+  document.getElementById("rf-ap").value="";
+  document.getElementById("rf-from").value="";
+  document.getElementById("rf-to").value="";
+  renderResList();
+}
+
 function renderResList(){
   var rf=document.getElementById("rf-rom").value;
   var af=(document.getElementById("rf-ap").value||"").toLowerCase();
+  var rfrom=document.getElementById("rf-from").value;
+  var rto=document.getElementById("rf-to").value;
   var flt=visits.filter(function(v){
     if(rf&&v.rom!==rf) return false;
     if(af&&v.apotek.toLowerCase().indexOf(af)<0) return false;
+    var vdate=(v.date||v.tanggal||"").slice(0,10);
+    if(rfrom&&vdate<rfrom) return false;
+    if(rto&&vdate>rto) return false;
     return true;
   });
   var rl=document.getElementById("rlist");
